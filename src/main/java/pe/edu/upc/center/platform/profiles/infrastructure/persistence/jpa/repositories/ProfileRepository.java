@@ -3,6 +3,8 @@ package pe.edu.upc.center.platform.profiles.infrastructure.persistence.jpa.repos
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pe.edu.upc.center.platform.profiles.domain.model.aggregates.Profile;
+import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.Document;
+import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.EmailAddress;
 import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.PersonName;
 
 import java.util.List;
@@ -23,6 +25,20 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
    */
   boolean existsByName(PersonName name);
 
+  /** Custom query method to check existence of a profile by document.
+   *
+   * @param document the document to check for existence
+   * @return true if a profile with the given document exists, false otherwise
+   */
+  boolean existsByDocument(Document document);
+
+  /** Custom query method to check existence of a profile by email.
+   *
+   * @param email the email to check for existence
+   * @return true if a profile with the given email exists, false otherwise
+   */
+  boolean existsByEmail(EmailAddress email);
+
   /** Custom query method to check existence of a profile by full name excluding a specific ID.
    *
    * @param name the last name to check for existence
@@ -32,12 +48,22 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
    */
   boolean existsByNameAndIdIsNot(PersonName name, Long id);
 
+  boolean existsByDocumentAndIdIsNot(Document document, Long id);
+  boolean existsByEmailAndIdIsNot(EmailAddress email, Long id);
+
   /** Custom query method to find a profile by full name.
    *
    * @param name the full name to search for
    * @return an Optional containing the found Profile if found, or empty if not found
    */
   Optional<Profile> findByName(PersonName name);
+
+  /** Custom query method to find a profile by email.
+   *
+   * @param email the email to search for
+   * @return an Optional containing the found Profile if found, or empty if not found
+   */
+  Optional<Profile> findByEmail(EmailAddress email);
 
   /** Custom query method to find profiles by age.
    *

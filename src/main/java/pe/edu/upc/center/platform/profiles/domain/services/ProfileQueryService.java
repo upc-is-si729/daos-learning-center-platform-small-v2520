@@ -43,6 +43,13 @@ public interface ProfileQueryService {
   List<Profile> handle(GetProfileByAgeQuery query);
 
   /**
+   * Handle the query to get a profile by its email.
+   * @param query the query containing the profile email
+   * @return an optional profile matching the email
+   */
+  Optional<Profile> handle(GetProfileByEmailQuery query);
+
+  /**
    * Handle the query to check if a profile exists by its ID.
    *
    * @param query the query containing the profile ID

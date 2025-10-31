@@ -26,7 +26,7 @@ public class StudentAssembler {
 
   public static StudentResponse toResponseFromEntity(Student entity) {
 
-    return new StudentResponse(entity.getStudentCode().studentCode(),
+    return new StudentResponse(entity.getCode().code(),
         entity.getProfileId().profileId(),
         entity.getProgramId().programId(),
         entity.getCurriculumId().curriculumId(), entity.getStartPeriod());
@@ -34,7 +34,7 @@ public class StudentAssembler {
 
   public static StudentMinimalResponse toResponseMinimalFromEntity(Student entity) {
 
-    return new StudentMinimalResponse(entity.getStudentCode().studentCode(),
+    return new StudentMinimalResponse(entity.getCode().code(),
         entity.getProgramId().programId(), entity.getCurriculumId().curriculumId(),
         entity.getStartPeriod());
   }

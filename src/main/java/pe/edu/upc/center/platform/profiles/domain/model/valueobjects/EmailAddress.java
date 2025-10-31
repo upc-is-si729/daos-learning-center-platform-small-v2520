@@ -9,6 +9,7 @@ import java.util.Objects;
 
 @Embeddable
 public record EmailAddress(@Email @NotNull @NotBlank String address) {
+
     public EmailAddress {
         if (Objects.isNull(address) || address.isBlank()) {
             throw new IllegalArgumentException("Email address cannot be null or blank");
@@ -17,6 +18,7 @@ public record EmailAddress(@Email @NotNull @NotBlank String address) {
             throw new IllegalArgumentException("Invalid email address");
         }
     }
+
     public EmailAddress() {
         this(null);
     }

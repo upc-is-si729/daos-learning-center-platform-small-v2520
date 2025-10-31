@@ -1,11 +1,18 @@
 package pe.edu.upc.center.platform.profiles.domain.model.queries;
 
+import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.PersonName;
+
+import java.util.Objects;
+
 /**
  * Query to get a profile by last name.
  *
- * @param firstName The first name of the profile.
- * @param lastName The last name of the profile.
+ * @param name the person's name
  *
  */
-public record GetProfileByNameQuery(String firstName, String lastName) {
+public record GetProfileByNameQuery(PersonName name) {
+
+  public GetProfileByNameQuery {
+    Objects.requireNonNull(name, "name must not be null");
+  }
 }

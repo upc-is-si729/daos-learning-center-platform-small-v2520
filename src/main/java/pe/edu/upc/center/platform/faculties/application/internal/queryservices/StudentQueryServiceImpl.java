@@ -7,7 +7,7 @@ import pe.edu.upc.center.platform.faculties.domain.model.aggregates.Student;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetAllStudentsQuery;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByIdQuery;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByProfileIdQuery;
-import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByStudentCodeQuery;
+import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByCodeQuery;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentQueryService;
 import pe.edu.upc.center.platform.faculties.infrastructure.persistence.jpa.repositories.StudentRepository;
 
@@ -39,8 +39,8 @@ public class StudentQueryServiceImpl implements StudentQueryService {
   }
 
   @Override
-  public Optional<Student> handle(GetStudentByStudentCodeQuery query) {
-    return this.studentRepository.findByStudentCode(query.studentCode());
+  public Optional<Student> handle(GetStudentByCodeQuery query) {
+    return this.studentRepository.findByCode(query.code());
   }
 
   @Override

@@ -8,12 +8,12 @@ import java.util.UUID;
 /**
  * Represents a unique code for a student.
  *
- * @param studentCode the student code, it must not be null or blank and must be a valid UUID
+ * @param code the student code, it must not be null or blank and must be a valid UUID
  *
  * @author Open Source Application Development Team
  */
 @Embeddable
-public record StudentCode(String studentCode) {
+public record StudentCode(String code) {
 
   /**
    * Constructs a StudentCode object with a random UUID value.
@@ -25,16 +25,16 @@ public record StudentCode(String studentCode) {
   /**
    * Constructs a StudentCode object with validation.
    *
-   * @param studentCode the student code, it must not be null or blank and must be a valid UUID
+   * @param code the student code, it must not be null or blank and must be a valid UUID
    */
   public StudentCode {
-    if (Objects.isNull(studentCode) || studentCode.isBlank()) {
+    if (Objects.isNull(code) || code.isBlank()) {
       throw new IllegalArgumentException("Student code cannot be null or blank");
     }
-    if (studentCode.length() != 36) {
+    if (code.length() != 36) {
       throw new IllegalArgumentException("Student code must be 36 characters long");
     }
-    if (!studentCode.matches("[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}")) {
+    if (!code.matches("[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}")) {
       throw new IllegalArgumentException("Student code must be a valid UUID");
     }
   }

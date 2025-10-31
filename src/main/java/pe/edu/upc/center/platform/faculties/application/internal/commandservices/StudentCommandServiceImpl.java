@@ -53,7 +53,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
     var student = new Student(command);
     try {
       var createdStudent = this.studentRepository.save(student);
-      return createdStudent.getStudentCode();
+      return createdStudent.getCode();
     } catch (Exception e) {
       throw new IllegalArgumentException("Unable to create student: " + e.getMessage());
     }
@@ -63,12 +63,12 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   public Optional<Student> handle(TransferProgramStudentCommand command) {
 
     // validate if a student exists
-    if (!this.studentRepository.existsByStudentCode(command.studentCode())) {
+    if (!this.studentRepository.existsByCode(command.studentCode())) {
       throw new IllegalArgumentException("Student not found with code " + command.studentCode());
     }
     // validate if a program exists
 
-    var studentToUpdate = this.studentRepository.findByStudentCode(command.studentCode()).get();
+    var studentToUpdate = this.studentRepository.findByCode(command.studentCode()).get();
     studentToUpdate.updateProgram(command);
 
     try {
@@ -84,7 +84,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   public Optional<Student> handle(ChangeCurriculumStudentCommand command) {
 
     try {
-      this.studentRepository.findByStudentCode(command.studentCode()).map(student -> {
+      this.studentRepository.findByCode(command.studentCode()).map(student -> {
         student.updateCurriculum(command);
         return Optional.of(this.studentRepository.save(student));
       }).orElseThrow(() ->
@@ -99,11 +99,11 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   @Override
   public void handle(DeleteStudentCommand command) {
     // validate if a student exists
-    if (!this.studentRepository.existsByStudentCode(command.studentCode())) {
+    if (!this.studentRepository.existsByCode(command.studentCode())) {
       throw new IllegalArgumentException("Student not found");
     }
 
-    this.studentRepository.findByStudentCode(command.studentCode()).ifPresent(optionalStudent -> {
+    this.studentRepository.findByCode(command.studentCode()).ifPresent(optionalStudent -> {
       this.studentRepository.deleteById(optionalStudent.getId());
     });
   }

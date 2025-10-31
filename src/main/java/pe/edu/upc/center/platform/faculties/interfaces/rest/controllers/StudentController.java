@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetAllStudentsQuery;
-import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByStudentCodeQuery;
+import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByCodeQuery;
 import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.StudentCode;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentCommandService;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentQueryService;
@@ -74,12 +74,12 @@ public class StudentController {
     var studentCode = this.studentCommandService.handle(createStudentCommand);
 
     // Validate if student code is null or blank
-    if (Objects.isNull(studentCode) || studentCode.studentCode().isBlank()) {
+    if (Objects.isNull(studentCode) || studentCode.code().isBlank()) {
       return ResponseEntity.badRequest().build();
     }
 
     // Fetch student
-    var getStudentByStudentCodeQuery = new GetStudentByStudentCodeQuery(studentCode);
+    var getStudentByStudentCodeQuery = new GetStudentByCodeQuery(studentCode);
     var student = this.studentQueryService.handle(getStudentByStudentCodeQuery);
     if (student.isEmpty()) {
       return ResponseEntity.badRequest().build();
@@ -129,7 +129,7 @@ public class StudentController {
   )
   @GetMapping("/{studentCode}")
   public ResponseEntity<StudentResponse> getStudentByStudentCode(@PathVariable String studentCode) {
-    var getStudentByStudentCodeQuery = new GetStudentByStudentCodeQuery(
+    var getStudentByStudentCodeQuery = new GetStudentByCodeQuery(
         new StudentCode(studentCode));
     var optionalStudent = this.studentQueryService.handle(getStudentByStudentCodeQuery);
     if (optionalStudent.isEmpty()) {

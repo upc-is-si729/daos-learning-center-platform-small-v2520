@@ -9,6 +9,7 @@ import java.util.Objects;
 @Embeddable
 public record PersonName(@NotNull @NotBlank String firstName,
                          @NotNull @NotBlank String lastName) {
+
     public PersonName {
         if (Objects.isNull(firstName) || firstName.isBlank()) {
             throw new IllegalArgumentException("First name cannot be null or blank");

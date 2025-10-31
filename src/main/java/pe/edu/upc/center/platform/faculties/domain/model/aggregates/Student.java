@@ -22,10 +22,10 @@ public class Student extends AuditableAbstractAggregateRoot<Student> {
   @Getter
   @Embedded
   @AttributeOverrides({
-      @AttributeOverride(name = "studentCode",
+      @AttributeOverride(name = "code",
           column = @Column(name = "code", length = 36, nullable = false))
   })
-  private final StudentCode studentCode;
+  private final StudentCode code;
 
   @Getter
   @Embedded
@@ -59,7 +59,7 @@ public class Student extends AuditableAbstractAggregateRoot<Student> {
    * Default constructor for JPA.
    */
   public Student() {
-    this.studentCode = new StudentCode();
+    this.code = new StudentCode();
   }
 
   /**

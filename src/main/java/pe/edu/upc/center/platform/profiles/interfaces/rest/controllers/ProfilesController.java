@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,9 @@ import pe.edu.upc.center.platform.profiles.domain.model.queries.GetProfileByIdQu
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileCommandService;
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileQueryService;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.assemblers.ProfileAssembler;
-import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.CreateProfileRequest;
-import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.ProfileMinimalResponse;
-import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.ProfileResponse;
-import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.UpdateProfileRequest;
+import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.*;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.ValidationExceptionResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -75,12 +73,12 @@ public class ProfilesController {
         @ApiResponse(responseCode = "400", description = "Bad request - Invalid input data",
             content = @Content(
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = RuntimeException.class)))
+                schema = @Schema(implementation = ValidationExceptionResponse.class)))
       }
   )
   @PostMapping
   public ResponseEntity<ProfileMinimalResponse> createProfile(
-      @RequestBody CreateProfileRequest request) {
+      @Valid @RequestBody CreateProfileRequest request) {
 
     var createProfileCommand = ProfileAssembler.toCommandFromRequest(request);
     var profileId = this.profileCommandService.handle(createProfileCommand);
@@ -186,7 +184,7 @@ public class ProfilesController {
   )
   @PutMapping("/{profileId}")
   public ResponseEntity<ProfileResponse> updateProfile(@PathVariable Long profileId,
-                                                       @RequestBody UpdateProfileRequest request) {
+                                                       @Valid @RequestBody UpdateProfileRequest request) {
     var updateProfileCommand = ProfileAssembler.toCommandFromRequest(profileId, request);
     var optionalProfile = this.profileCommandService.handle(updateProfileCommand);
 

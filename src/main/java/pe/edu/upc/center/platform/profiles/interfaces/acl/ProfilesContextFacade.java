@@ -7,6 +7,7 @@ import pe.edu.upc.center.platform.profiles.domain.model.commands.UpdateProfileCo
 import pe.edu.upc.center.platform.profiles.domain.model.queries.ExistsProfileByIdQuery;
 import pe.edu.upc.center.platform.profiles.domain.model.queries.GetProfileByIdQuery;
 import pe.edu.upc.center.platform.profiles.domain.model.queries.GetProfileByNameQuery;
+import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.PersonName;
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileCommandService;
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileQueryService;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.assemblers.ProfileAssembler;
@@ -71,7 +72,7 @@ public class ProfilesContextFacade {
    * @return the profile ID if found, otherwise returns 0L
    */
   public Long fetchProfileIdByFullName(String firstName, String lastName) {
-    var getProfileByFullNameQuery = new GetProfileByNameQuery(firstName, lastName);
+    var getProfileByFullNameQuery = new GetProfileByNameQuery(new PersonName(firstName, lastName));
     var optionalProfile = profileQueryService.handle(getProfileByFullNameQuery);
     if (optionalProfile.isEmpty()) {
       return 0L;
@@ -90,7 +91,7 @@ public class ProfilesContextFacade {
    *     false otherwise
    */
   public boolean existsProfileByFullNameAndIdIsNot(String firstName, String lastName, Long id) {
-    var getProfileByFullNameQuery = new GetProfileByNameQuery(firstName, lastName);
+    var getProfileByFullNameQuery = new GetProfileByNameQuery(new PersonName(firstName, lastName));
     var optionalProfile = profileQueryService.handle(getProfileByFullNameQuery);
     if (optionalProfile.isEmpty()) {
       return false;

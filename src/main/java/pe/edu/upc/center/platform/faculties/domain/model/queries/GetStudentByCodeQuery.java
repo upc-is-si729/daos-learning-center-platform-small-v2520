@@ -5,7 +5,7 @@ import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.StudentCod
 /**
  * Query to get a student by their student code.
  *
- * @param studentCode The unique code of the student.
+ * @param code The unique code of the student.
  */
-public record GetStudentByStudentCodeQuery(StudentCode studentCode) {
+public record GetStudentByCodeQuery(StudentCode code) {
 }

@@ -85,40 +85,25 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
    * @param command createProfileCommand containing profile details
    */
   public Profile(CreateProfileCommand command) {
-    this.name = new PersonName(command.firstName(), command.lastName());
-    this.document = new Document(command.documentType(), command.documentNumber());
+    this.name = command.name();
+    this.document = command.document();
     this.birthDate = command.birthDate();
     this.age = command.age();
-    this.email = new EmailAddress(command.email());
-    this.address = new StreetAddress(command.street(), command.streetNumber(),
-        command.city(), command.postalCode(), command.country());
+    this.email = command.email();
+    this.address = command.address();
   }
   /** Update the profile with the specified details.
    *
    * @param command the UpdateProfileCommand containing the new profile details
    */
   public void updateProfile(UpdateProfileCommand command) {
-    this.name = new PersonName(command.firstName(), command.lastName());
-    this.document = new Document(command.documentType(), command.documentNumber());
+    this.name = command.name();
+    this.document = command.document();
     this.birthDate = command.birthDate();
     this.age = command.age();
-    this.email = new EmailAddress(command.email());
-    this.address = new StreetAddress(command.street(), command.streetNumber(),
-        command.city(), command.postalCode(), command.country());
+    this.email = command.email();
+    this.address = command.address();
   }
-
-  /**
-   * Constructs a Profile instance with the specified details.
-   *
-   * @param fullName the full name of the profile
-   * @param age      the age of the profile
-   * @param street   the street address of the profile
-   */
-  /*public Profile(String fullName, int age, String street) {
-    this.fullName = fullName;
-    this.age = age;
-    this.address = new StreetAddress(street);
-  }*/
 
   // Evaluar si se requieren
   /** Updates the street address of the profile.

@@ -16,10 +16,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   /**
    * Find a student by their student code.
    *
-   * @param studentCode the student code to search for
+   * @param code the student code to search for
    * @return an Optional containing the Student if found, or empty if not found
    */
-  Optional<Student> findByStudentCode(StudentCode studentCode);
+  Optional<Student> findByCode(StudentCode code);
 
   /**
    * Find a student by their profile ID.
@@ -32,10 +32,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
   /**
    * Check if a student exists by their student code.
    *
-   * @param studentCode the student code to check
+   * @param code the student code to check
    * @return true if a student with the given student code exists, false otherwise
    */
-  boolean existsByStudentCode(StudentCode studentCode);
+  boolean existsByCode(StudentCode code);
 
   /**
    * Check if a student exists by their profile ID.

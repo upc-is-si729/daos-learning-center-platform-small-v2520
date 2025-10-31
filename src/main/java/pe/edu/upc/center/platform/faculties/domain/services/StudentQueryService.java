@@ -4,7 +4,7 @@ import pe.edu.upc.center.platform.faculties.domain.model.aggregates.Student;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetAllStudentsQuery;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByIdQuery;
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByProfileIdQuery;
-import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByStudentCodeQuery;
+import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByCodeQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public interface StudentQueryService {
    * @param query the query containing the student code
    * @return an Optional containing the Student if found, or empty if not found
    */
-  Optional<Student> handle(GetStudentByStudentCodeQuery query);
+  Optional<Student> handle(GetStudentByCodeQuery query);
 
   /**
    * Handle the query to get a student by their profile ID.

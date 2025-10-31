@@ -3,7 +3,7 @@ package pe.edu.upc.center.platform.profiles.interfaces.rest.assemblers;
 import pe.edu.upc.center.platform.profiles.domain.model.aggregates.Profile;
 import pe.edu.upc.center.platform.profiles.domain.model.commands.CreateProfileCommand;
 import pe.edu.upc.center.platform.profiles.domain.model.commands.UpdateProfileCommand;
-import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.DocumentTypes;
+import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.*;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.CreateProfileRequest;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.ProfileMinimalResponse;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.ProfileResponse;
@@ -17,21 +17,30 @@ public class ProfileAssembler {
 
   public static CreateProfileCommand toCommandFromRequest(CreateProfileRequest request) {
 
-    return new CreateProfileCommand( request.firstName(), request.lastName(),
+    return new CreateProfileCommand(new PersonName(request.firstName(), request.lastName()),
+        new Document(DocumentTypes.fromValue(request.documentType()), request.documentNumber()),
+        request.birthDate(), calculateAge(request.birthDate()),
+        new EmailAddress(request.email()),
+        new StreetAddress(request.street(), request.streetNumber(), request.city(),
+            request.postalCode(), request.country())
+    );
+    /*return new CreateProfileCommand( request.firstName(), request.lastName(),
         DocumentTypes.fromValue(request.documentType()), request.documentNumber(),
         request.birthDate(), calculateAge(request.birthDate()),
         request.email(), request.street(), request.streetNumber(), request.city(),
-        request.postalCode(), request.country());
+        request.postalCode(), request.country());*/
   }
 
   public static UpdateProfileCommand toCommandFromRequest(Long profileId,
                                                           UpdateProfileRequest request) {
 
-    return new UpdateProfileCommand( profileId, request.firstName(), request.lastName(),
-        DocumentTypes.fromValue(request.documentType()), request.documentNumber(),
+    return new UpdateProfileCommand( profileId,
+        new PersonName(request.firstName(), request.lastName()),
+        new Document(DocumentTypes.fromValue(request.documentType()), request.documentNumber()),
         request.birthDate(), calculateAge(request.birthDate()),
-        request.email(), request.street(), request.streetNumber(), request.city(),
-        request.postalCode(), request.country());
+        new EmailAddress(request.email()),
+        new StreetAddress(request.street(), request.streetNumber(), request.city(),
+            request.postalCode(), request.country()));
   }
 
   public static ProfileResponse toResponseFromEntity(Profile entity) {
@@ -62,9 +71,11 @@ public class ProfileAssembler {
       LocalDate birthDate, String email, String street, String streetNumber, String city,
       String postalCode, String country) {
 
-    return new CreateProfileCommand(firstName, lastName, DocumentTypes.fromValue(documentType),
-        documentNumber, birthDate, calculateAge(birthDate), email, street, streetNumber, city,
-        postalCode, country);
+    return new CreateProfileCommand(new PersonName(firstName, lastName),
+        new Document(DocumentTypes.fromValue(documentType), documentNumber),
+        birthDate, calculateAge(birthDate),
+        new EmailAddress(email),
+        new StreetAddress(street, streetNumber, city, postalCode, country));
   }
 
   public static UpdateProfileCommand toCommandFromValues(
@@ -72,9 +83,10 @@ public class ProfileAssembler {
       LocalDate birthDate, String email, String street, String streetNumber, String city,
       String postalCode, String country) {
 
-    return new UpdateProfileCommand(profileId, firstName, lastName,
-        DocumentTypes.fromValue(documentType), documentNumber, birthDate,
-        calculateAge(birthDate), email, street, streetNumber, city,
-        postalCode, country);
+    return new UpdateProfileCommand(profileId, new PersonName(firstName, lastName),
+        new Document(DocumentTypes.fromValue(documentType), documentNumber),
+        birthDate, calculateAge(birthDate),
+        new EmailAddress(email),
+        new StreetAddress(street, streetNumber, city, postalCode, country));
   }
 }

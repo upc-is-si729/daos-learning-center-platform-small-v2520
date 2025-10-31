@@ -35,13 +35,19 @@ public record StreetAddress(@NotNull @NotBlank String street, @NotNull @NotBlank
       throw new IllegalArgumentException("Street cannot be null or blank");
     }
     if (Objects.isNull(number) || number.isBlank()) {
-      throw new IllegalArgumentException("Number cannot be null or blank");
+      throw new IllegalArgumentException("Street Number cannot be null or blank");
+    }
+    if (number.length() > 5) {
+      throw new IllegalArgumentException("Street Number cannot have more than 5 digits");
     }
     if (Objects.isNull(city) || city.isBlank()) {
       throw new IllegalArgumentException("City cannot be null or blank");
     }
     if (Objects.isNull(postalCode) || postalCode.isBlank()) {
       throw new IllegalArgumentException("Postal code cannot be null or blank");
+    }
+    if (postalCode.length() != 5) {
+      throw new IllegalArgumentException("Postal code must be 5 digits long");
     }
     if(Objects.isNull(country) || country.isBlank()){
       throw new IllegalArgumentException("Country cannot be null or blank");
