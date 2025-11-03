@@ -8,14 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Embeddable
-public record EmailAddress(@Email @NotNull @NotBlank String address) {
+public record EmailAddress(String address) {
 
     public EmailAddress {
         if (Objects.isNull(address) || address.isBlank()) {
-            throw new IllegalArgumentException("Email address cannot be null or blank");
+            throw new IllegalArgumentException("[EmailAddress] Email address cannot be null or blank");
         }
         if (!address.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")) {
-            throw new IllegalArgumentException("Invalid email address");
+            throw new IllegalArgumentException("[EmailAddress] Invalid email address");
         }
     }
 

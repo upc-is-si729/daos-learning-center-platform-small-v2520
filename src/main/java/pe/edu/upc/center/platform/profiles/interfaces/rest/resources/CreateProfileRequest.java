@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.DocumentTypes;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 /**
  * Request to create a profile.
@@ -70,31 +71,6 @@ public record CreateProfileRequest(
     @JsonProperty("country")
     @NotNull @NotBlank
     String country) {
-
-  /*@JsonCreator
-  public CreateProfileRequest(@JsonProperty("firstName") String firstName,
-                              @JsonProperty("lastName") String lastName,
-                              @JsonProperty("documentType") int documentType,
-                              @JsonProperty("documentNumber") String documentNumber,
-                              @JsonProperty("birthDate") LocalDate birthDate,
-                              @JsonProperty("email") String email,
-                              @JsonProperty("street") String street,
-                              @JsonProperty("number") String streetNumber,
-                              @JsonProperty("city") String city,
-                              @JsonProperty("postalCode") String postalCode,
-                              @JsonProperty("country") String country) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.documentType = documentType;
-    this.documentNumber = documentNumber;
-    this.birthDate = birthDate;
-    this.email = email;
-    this.street = street;
-    this.streetNumber = streetNumber;
-    this.city = city;
-    this.postalCode = postalCode;
-    this.country = country;
-  }*/
 
 }
 

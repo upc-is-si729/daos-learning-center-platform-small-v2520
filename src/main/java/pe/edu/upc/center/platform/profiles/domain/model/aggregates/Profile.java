@@ -54,7 +54,8 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
   @Getter
   @Embedded
   @AttributeOverrides({
-          @AttributeOverride(name = "address", column = @Column(name = "email_address", length = 100, nullable = false))})
+      @AttributeOverride(name = "address",
+          column = @Column(name = "email_address", length = 100, nullable = false))})
   private EmailAddress email;
 
   @Getter
@@ -103,27 +104,6 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     this.age = command.age();
     this.email = command.email();
     this.address = command.address();
-  }
-
-  // Evaluar si se requieren
-  /** Updates the street address of the profile.
-   *
-   * @param street the new street address
-   */
-  public void updateStreetAddress(String street, String number, String city,
-                                  String postalCode, String country) {
-    this.address = new StreetAddress(street, number, city, postalCode, country);
-  }
-  public void updateName(String firstName, String lastName) {
-    this.name = new PersonName(firstName, lastName);
-  }
-
-  public void updateEmail(String email) {
-    this.email = new EmailAddress(email);
-  }
-
-  public void updateAddress(String street, String number, String city, String postalCode, String country) {
-    this.address = new StreetAddress(street, number, city, postalCode, country);
   }
 
   public String getFullName() {

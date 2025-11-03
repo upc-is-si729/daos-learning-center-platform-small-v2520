@@ -13,6 +13,6 @@ import java.util.Objects;
 public record GetProfileByNameQuery(PersonName name) {
 
   public GetProfileByNameQuery {
-    Objects.requireNonNull(name, "name must not be null");
+    Objects.requireNonNull(name, "[GetProfileByNameQuery] name must not be null");
   }
 }

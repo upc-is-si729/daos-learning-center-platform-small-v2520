@@ -21,20 +21,20 @@ public record UpdateProfileCommand(Long profileId, PersonName name, Document doc
                                    EmailAddress email, StreetAddress address) {
 
   public UpdateProfileCommand {
-    Objects.requireNonNull(name, "name must not be null");
-    Objects.requireNonNull(document, "document must not be null");
-    Objects.requireNonNull(email, "email must not be null");
-    Objects.requireNonNull(address, "address must not be null");
-    Objects.requireNonNull(birthDate, "birthDate must not be null");
+    Objects.requireNonNull(name, "[UpdateProfileCommand] name must not be null");
+    Objects.requireNonNull(document, "[UpdateProfileCommand] document must not be null");
+    Objects.requireNonNull(email, "[UpdateProfileCommand] email must not be null");
+    Objects.requireNonNull(address, "[UpdateProfileCommand] address must not be null");
+    Objects.requireNonNull(birthDate, "[UpdateProfileCommand] birthDate must not be null");
 
     if (profileId < 0) {
-      throw new IllegalArgumentException("profileId must be greater than 0");
+      throw new IllegalArgumentException("[UpdateProfileCommand] profileId must be greater than 0");
     }
     if (age < 0 || age > 100) {
-      throw new IllegalArgumentException("the age must be between 0 and 100");
+      throw new IllegalArgumentException("[UpdateProfileCommand] the age must be between 0 and 100");
     }
     if (birthDate.isAfter(LocalDate.now())) {
-      throw new IllegalArgumentException("The birthdate cannot be in the future");
+      throw new IllegalArgumentException("[UpdateProfileCommand] The birthdate cannot be in the future");
     }
   }
 }

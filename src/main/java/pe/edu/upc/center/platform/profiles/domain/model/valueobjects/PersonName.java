@@ -7,15 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Embeddable
-public record PersonName(@NotNull @NotBlank String firstName,
-                         @NotNull @NotBlank String lastName) {
+public record PersonName(String firstName, String lastName) {
 
     public PersonName {
         if (Objects.isNull(firstName) || firstName.isBlank()) {
-            throw new IllegalArgumentException("First name cannot be null or blank");
+            throw new IllegalArgumentException("[PersonName] First name cannot be null or blank");
         }
         if (Objects.isNull(lastName) || lastName.isBlank()) {
-            throw new IllegalArgumentException("Last name cannot be null or blank");
+            throw new IllegalArgumentException("[PersonName] Last name cannot be null or blank");
         }
     }
 

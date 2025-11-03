@@ -1,13 +1,16 @@
 package pe.edu.upc.center.platform.shared.interfaces.rest.handlers;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.PersistenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pe.edu.upc.center.platform.shared.interfaces.rest.resources.IllegalArgumentExceptionResponse;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.NullPointerExceptionResponse;
 import pe.edu.upc.center.platform.shared.interfaces.rest.resources.PersistenceExceptionResponse;
 import pe.edu.upc.center.platform.shared.interfaces.rest.resources.ValidationExceptionResponse;
 
@@ -27,7 +30,8 @@ public class GlobalExceptionHandler {
         .forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
 
     var response = new ValidationExceptionResponse(
-        HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Validation failed", errors);
+        HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
+        "Validation failed", errors);
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
@@ -39,7 +43,8 @@ public class GlobalExceptionHandler {
 
     var response = new IllegalArgumentExceptionResponse(
         HttpStatus.BAD_REQUEST.value(),
-        HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage());
+        HttpStatus.BAD_REQUEST.getReasonPhrase(),
+        ex.getMessage());
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
   }
 
@@ -54,5 +59,18 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
   }
 
+  @ExceptionHandler(NullPointerException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ResponseEntity<NullPointerExceptionResponse> handleNullPointerException(
+      NullPointerException ex) {
+
+    var response = new NullPointerExceptionResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+        ex.getMessage());
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+  }
 
 }
+
+

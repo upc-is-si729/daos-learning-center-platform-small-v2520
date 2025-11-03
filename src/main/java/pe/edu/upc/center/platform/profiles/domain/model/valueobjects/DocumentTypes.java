@@ -25,6 +25,6 @@ public enum DocumentTypes {
         .filter(dt -> dt.value == value)
         .findFirst()
         .orElseThrow(() ->
-            new IllegalArgumentException("Invalid value for DocumentType: " + value));
+            new IllegalArgumentException("[DocumentTypes] Invalid value for DocumentType: " + value));
   }
 }

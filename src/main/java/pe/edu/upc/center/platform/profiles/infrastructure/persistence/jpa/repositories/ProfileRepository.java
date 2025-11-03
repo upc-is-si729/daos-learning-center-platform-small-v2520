@@ -18,37 +18,34 @@ import java.util.Optional;
 @Repository
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
-  /** Custom query method to check existence of a profile by full name.
-   *
-   * @param name the full name to check for existence
-   * @return true if a profile with the given full name exists, false otherwise
-   */
-  boolean existsByName(PersonName name);
-
-  /** Custom query method to check existence of a profile by document.
+  /** Custom query method to check the existence of a profile by document.
    *
    * @param document the document to check for existence
    * @return true if a profile with the given document exists, false otherwise
    */
   boolean existsByDocument(Document document);
 
-  /** Custom query method to check existence of a profile by email.
+  /** Custom query method to check the existence of a profile by email.
    *
    * @param email the email to check for existence
    * @return true if a profile with the given email exists, false otherwise
    */
   boolean existsByEmail(EmailAddress email);
 
-  /** Custom query method to check existence of a profile by full name excluding a specific ID.
+  /** Custom query method to check the existence of a profile by document excluding a specific ID.
    *
-   * @param name the last name to check for existence
+   * @param document the document to check for existence
    * @param id the ID to exclude from the check
-   * @return true if a profile with the given last name exists excluding the specified ID,
-   *     false otherwise
+   * @return true if a profile with the given document exists, false otherwise
    */
-  boolean existsByNameAndIdIsNot(PersonName name, Long id);
-
   boolean existsByDocumentAndIdIsNot(Document document, Long id);
+
+  /** Custom query method to check the existence of a profile by email excluding a specific ID.
+   *
+   * @param email the email to check for existence
+   * @param id the ID to exclude from the check
+   * @return true if a profile with the given email exists, false otherwise
+   */
   boolean existsByEmailAndIdIsNot(EmailAddress email, Long id);
 
   /** Custom query method to find a profile by full name.

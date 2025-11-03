@@ -24,11 +24,6 @@ public class ProfileAssembler {
         new StreetAddress(request.street(), request.streetNumber(), request.city(),
             request.postalCode(), request.country())
     );
-    /*return new CreateProfileCommand( request.firstName(), request.lastName(),
-        DocumentTypes.fromValue(request.documentType()), request.documentNumber(),
-        request.birthDate(), calculateAge(request.birthDate()),
-        request.email(), request.street(), request.streetNumber(), request.city(),
-        request.postalCode(), request.country());*/
   }
 
   public static UpdateProfileCommand toCommandFromRequest(Long profileId,
@@ -53,6 +48,7 @@ public class ProfileAssembler {
         entity.getAddress().city(), entity.getAddress().postalCode(),
         entity.getAddress().country());
   }
+
   public static ProfileMinimalResponse toResponseMinimalFromEntity(Profile entity) {
     return new ProfileMinimalResponse(entity.getId(), entity.getFullName(),
         entity.getFullDocument(), entity.getBirthDate().toString(),

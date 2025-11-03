@@ -34,19 +34,20 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
 
     // Validate if the profile already exists
     if (this.profileRepository.existsByEmail(command.email())) {
-      throw new IllegalArgumentException("Profile with email " + command.email()
-          + " already exists");
+      throw new IllegalArgumentException("[ProfileCommandServiceImpl] Profile with email "
+          + command.email().address() + " already exists");
     }
     if (this.profileRepository.existsByDocument(command.document())) {
-      throw new IllegalArgumentException("Profile with document " + command.document()
-          + " already exists");
+      throw new IllegalArgumentException("[ProfileCommandServiceImpl] Profile with document "
+          + command.document().getFullDocument() + " already exists");
     }
     // Create the profile
     var profile = new Profile(command);
     try {
       this.profileRepository.save(profile);
     } catch (Exception e) {
-      throw new PersistenceException("Error while saving profile: " + e.getMessage());
+      throw new PersistenceException("[ProfileCommandServiceImpl] Error while saving profile: "
+          + e.getMessage());
     }
     return profile.getId();
   }
@@ -60,12 +61,12 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
       throw new ProfileNotfoundException(profileId);
     }
     if (this.profileRepository.existsByEmailAndIdIsNot(command.email(), profileId)) {
-      throw new IllegalArgumentException("Profile with email " + command.email()
-          + " already exists");
+      throw new IllegalArgumentException("[ProfileCommandServiceImpl] Profile with email "
+          + command.email().address() + " already exists");
     }
     if (this.profileRepository.existsByDocumentAndIdIsNot(command.document(), profileId)) {
-      throw new IllegalArgumentException("Profile with document " + command.document()
-          + " already exists");
+      throw new IllegalArgumentException("[ProfileCommandServiceImpl] Profile with document "
+          + command.document().getFullDocument() + " already exists");
     }
 
     // Update the profile
@@ -76,7 +77,8 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
       var updatedProfile = this.profileRepository.save(profileToUpdate);
       return Optional.of(updatedProfile);
     } catch (Exception e) {
-      throw new PersistenceException("Error while updating profile: " + e.getMessage());
+      throw new PersistenceException("[ProfileCommandServiceImpl] Error while updating profile: "
+          + e.getMessage());
     }
   }
 
@@ -91,7 +93,8 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     try {
       this.profileRepository.deleteById(command.profileId());
     } catch (Exception e) {
-      throw new PersistenceException("Error while deleting profile: " + e.getMessage());
+      throw new PersistenceException("[ProfileCommandServiceImpl] Error while deleting profile: "
+          + e.getMessage());
     }
   }
 }

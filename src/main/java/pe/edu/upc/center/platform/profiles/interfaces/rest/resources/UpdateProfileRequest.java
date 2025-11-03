@@ -26,7 +26,7 @@ import java.time.LocalDate;
 public record UpdateProfileRequest(
 
     @JsonProperty("id")
-    @NotNull(message = "id must not be null")
+    @NotNull
     Long id,
 
     @JsonProperty("firstName")
@@ -34,81 +34,45 @@ public record UpdateProfileRequest(
     String firstName,
 
     @JsonProperty("lastName")
-    @NotNull(message = "lastName must not be null")
-    @NotBlank(message = "lastName must not be blank")
+    @NotNull @NotBlank
     String lastName,
 
     @JsonProperty("documentType")
-    @Min(value = 0, message = "documentType must be a valid DocumentTypes ordinal")
-    @Max(value = 15, message = "documentType must be a valid DocumentTypes ordinal")
+    @Min(0) @Max(15)
     int documentType,
 
     @JsonProperty("documentNumber")
-    @NotNull(message = "documentNumber must not be null")
-    @NotBlank(message = "documentNumber must not be blank")
+    @NotNull @NotBlank @Size(min = 8, max = 12)
     String documentNumber,
 
-    @JsonProperty("birthDate")
-    @NotNull(message = "birthDate must not be null")
-    @Past(message = "birthDate must be in the past")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("birthDate") @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull @Past
     LocalDate birthDate,
 
     @JsonProperty("email")
-    @Email(message = "email must be a valid email address")
-    @NotBlank(message = "email must not be blank")
+    @NotNull @NotBlank @Email
     String email,
 
     @JsonProperty("street")
-    @NotNull(message = "street must not be null")
-    @NotBlank(message = "street must not be blank")
+    @NotNull @NotBlank
     String street,
 
     @JsonProperty("streetNumber")
-    @NotNull(message = "streetNumber must not be null")
-    @NotBlank(message = "streetNumber must not be blank")
+    @NotNull @NotBlank
+    @Size(min = 1, max = 5)
     String streetNumber,
 
     @JsonProperty("city")
-    @NotNull(message = "city must not be null")
-    @NotBlank(message = "city must not be blank")
+    @NotNull @NotBlank
     String city,
 
     @JsonProperty("postalCode")
-    @NotNull(message = "postalCode must not be null")
-    @NotBlank(message = "postalCode must not be blank")
-    @Pattern(regexp = "\\d{4,6}", message = "postalCode must be numeric and between 4 and 6 digits")
+    @NotNull @NotBlank
+    @Pattern(regexp = "\\d{5}", message = "Postal code must be 5 digits")
+    @Size(min = 5, max = 5)
     String postalCode,
 
     @JsonProperty("country")
-    @NotNull(message = "country must not be null")
-    @NotBlank(message = "country must not be blank")
-    String country
-                                   ) {
-  @JsonCreator
-  public UpdateProfileRequest(@JsonProperty("id") Long id,
-                              @JsonProperty("firstName") String firstName,
-                              @JsonProperty("lastName") String lastName,
-                              @JsonProperty("documentType") int documentType,
-                              @JsonProperty("documentNumber") String documentNumber,
-                              @JsonProperty("birthDate") LocalDate birthDate,
-                              @JsonProperty("email") String email,
-                              @JsonProperty("street") String street,
-                              @JsonProperty("streetNumber") String streetNumber,
-                              @JsonProperty("city") String city,
-                              @JsonProperty("postalCode") String postalCode,
-                              @JsonProperty("country") String country) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.documentType = documentType;
-    this.documentNumber = documentNumber;
-    this.birthDate = birthDate;
-    this.email = email;
-    this.street = street;
-    this.streetNumber = streetNumber;
-    this.city = city;
-    this.postalCode = postalCode;
-    this.country = country;
-  }
+    @NotNull @NotBlank
+    String country) {
 }

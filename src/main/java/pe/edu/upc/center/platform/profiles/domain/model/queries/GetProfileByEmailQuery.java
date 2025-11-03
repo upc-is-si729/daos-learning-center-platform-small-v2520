@@ -7,7 +7,7 @@ import java.util.Objects;
 public record GetProfileByEmailQuery(EmailAddress email) {
 
   public GetProfileByEmailQuery {
-    Objects.requireNonNull(email, "Email cannot be null");
+    Objects.requireNonNull(email, "[GetProfileByEmailQuery] Email cannot be null");
   }
 
 }

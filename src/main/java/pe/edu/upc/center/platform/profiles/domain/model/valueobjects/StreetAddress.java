@@ -10,9 +10,8 @@ import java.util.Objects;
  * Value object representing a street address.
  */
 @Embeddable
-public record StreetAddress(@NotNull @NotBlank String street, @NotNull @NotBlank String number,
-                            @NotNull @NotBlank String city, @NotNull @NotBlank String postalCode,
-                            @NotNull @NotBlank String country) {
+public record StreetAddress(String street, String number, String city, String postalCode,
+                            String country) {
 
   /**
    * Default constructor for JPA.
@@ -32,27 +31,28 @@ public record StreetAddress(@NotNull @NotBlank String street, @NotNull @NotBlank
    */
   public StreetAddress {
     if (Objects.isNull(street) || street.isBlank()) {
-      throw new IllegalArgumentException("Street cannot be null or blank");
+      throw new IllegalArgumentException("[StreetAddress] Street cannot be null or blank");
     }
     if (Objects.isNull(number) || number.isBlank()) {
-      throw new IllegalArgumentException("Street Number cannot be null or blank");
+      throw new IllegalArgumentException("[StreetAddress] Street Number cannot be null or blank");
     }
     if (number.length() > 5) {
-      throw new IllegalArgumentException("Street Number cannot have more than 5 digits");
+      throw new IllegalArgumentException("[StreetAddress] Street Number cannot have more than 5 digits");
     }
     if (Objects.isNull(city) || city.isBlank()) {
-      throw new IllegalArgumentException("City cannot be null or blank");
+      throw new IllegalArgumentException("[StreetAddress] City cannot be null or blank");
     }
     if (Objects.isNull(postalCode) || postalCode.isBlank()) {
-      throw new IllegalArgumentException("Postal code cannot be null or blank");
+      throw new IllegalArgumentException("[StreetAddress] Postal code cannot be null or blank");
     }
     if (postalCode.length() != 5) {
-      throw new IllegalArgumentException("Postal code must be 5 digits long");
+      throw new IllegalArgumentException("[StreetAddress] Postal code must be 5 digits long");
     }
     if(Objects.isNull(country) || country.isBlank()){
-      throw new IllegalArgumentException("Country cannot be null or blank");
+      throw new IllegalArgumentException("[StreetAddress] Country cannot be null or blank");
     }
   }
+
   public String getFullAddress() {
     return String.format("%s %s, %s, %s, %s", street, number, city, postalCode, country);
   }
