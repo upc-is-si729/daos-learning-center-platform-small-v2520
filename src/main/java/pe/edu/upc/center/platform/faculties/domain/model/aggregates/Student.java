@@ -79,23 +79,10 @@ public class Student extends AuditableAbstractAggregateRoot<Student> {
    */
   public Student(CreateStudentCommand command) {
     this();
-    this.profileId = new ProfileId(command.profileId());
-    this.programId = new ProgramId(command.programId());
-    this.curriculumId = new CurriculumId(command.curriculumId());
+    this.profileId = command.profileId();
+    this.programId = command.programId();
+    this.curriculumId = command.curriculumId();
     this.startPeriod = Util.START_PERIOD_ACTUAL;
-  }
-  /**
-   * Constructs a Student instance with specified profile ID, program ID, and start period.
-   *
-   * @param profileId The profile ID associated with the student.
-   * @param programId The program ID the student is enrolled in.
-   * @param startPeriod The period when the student started.
-   */
-  public Student(ProfileId profileId, Long programId, String startPeriod) {
-    this();
-    this.profileId = profileId;
-    this.programId = new ProgramId(programId);
-    this.startPeriod = startPeriod;
   }
 
   /**
@@ -104,8 +91,8 @@ public class Student extends AuditableAbstractAggregateRoot<Student> {
     * @param command the command with the new program and curriculum
    */
   public void updateProgram(TransferProgramStudentCommand command) {
-    this.programId = new ProgramId(command.programId());
-    this.curriculumId = new CurriculumId(command.curriculumId());
+    this.programId = command.programId();
+    this.curriculumId = command.curriculumId();
     this.startPeriod = Util.START_PERIOD_ACTUAL;
   }
 
@@ -114,7 +101,7 @@ public class Student extends AuditableAbstractAggregateRoot<Student> {
    * @param command the command with the new curriculum
    */
   public void updateCurriculum(ChangeCurriculumStudentCommand command) {
-    this.curriculumId = new CurriculumId(command.curriculumId());
+    this.curriculumId = command.curriculumId();
   }
 
 }

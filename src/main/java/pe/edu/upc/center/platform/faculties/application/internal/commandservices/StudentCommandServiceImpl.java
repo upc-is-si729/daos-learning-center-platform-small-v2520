@@ -1,6 +1,8 @@
 package pe.edu.upc.center.platform.faculties.application.internal.commandservices;
 
 import java.util.Optional;
+
+import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Service;
 import pe.edu.upc.center.platform.faculties.application.internal.outboundservices.acl.ExternalProfileService;
 import pe.edu.upc.center.platform.faculties.domain.model.aggregates.Student;
@@ -8,10 +10,10 @@ import pe.edu.upc.center.platform.faculties.domain.model.commands.ChangeCurricul
 import pe.edu.upc.center.platform.faculties.domain.model.commands.CreateStudentCommand;
 import pe.edu.upc.center.platform.faculties.domain.model.commands.DeleteStudentCommand;
 import pe.edu.upc.center.platform.faculties.domain.model.commands.TransferProgramStudentCommand;
-import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.ProfileId;
 import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.StudentCode;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentCommandService;
 import pe.edu.upc.center.platform.faculties.infrastructure.persistence.jpa.repositories.StudentRepository;
+import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundArgumentException;
 
 /**
  * Implementation of the StudentCommandService interface for handling student-related commands.
@@ -29,7 +31,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
    * Constructs a StudentCommandServiceImpl with the specified dependencies.
    *
    * @param studentRepository the repository for managing Student entities
-   * @param externalProfileService the external service for managing profiles
+   * @param externalProfileService an external service for managing profiles
    */
   public StudentCommandServiceImpl(StudentRepository studentRepository,
                                    ExternalProfileService externalProfileService) {
@@ -39,7 +41,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
 
   @Override
   public StudentCode handle(CreateStudentCommand command) {
-    var profileId = new ProfileId(command.profileId());
+    var profileId = command.profileId();
     // Validate if profile ID already exists
     if (this.studentRepository.existsByProfileId(profileId)) {
       throw new IllegalArgumentException("Student with profile ID already exists");
@@ -47,7 +49,8 @@ public class StudentCommandServiceImpl implements StudentCommandService {
 
     // Validate if profile ID exists in external Profile Service
     if (!this.externalProfileService.existsProfileById(profileId)) {
-      throw  new IllegalArgumentException("Profile ID does not exist in external Profile Service");
+      throw new NotFoundArgumentException(
+          String.format("Profile ID: %s, not found in external Profile service: ", profileId.profileId()));
     }
 
     var student = new Student(command);
@@ -55,7 +58,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
       var createdStudent = this.studentRepository.save(student);
       return createdStudent.getCode();
     } catch (Exception e) {
-      throw new IllegalArgumentException("Unable to create student: " + e.getMessage());
+      throw new PersistenceException("Error while creating student: " + e.getMessage());
     }
   }
 
@@ -64,7 +67,8 @@ public class StudentCommandServiceImpl implements StudentCommandService {
 
     // validate if a student exists
     if (!this.studentRepository.existsByCode(command.studentCode())) {
-      throw new IllegalArgumentException("Student not found with code " + command.studentCode());
+      throw new NotFoundArgumentException(
+          String.format("Student not found with code %s", command.studentCode()));
     }
     // validate if a program exists
 
@@ -76,7 +80,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
       return Optional.of(updatedStudent);
     }
     catch (Exception e) {
-      throw new IllegalArgumentException("Error while updating student program: " + e.getMessage());
+      throw new PersistenceException("Error while updating student program: " + e.getMessage());
     }
   }
 
@@ -88,10 +92,10 @@ public class StudentCommandServiceImpl implements StudentCommandService {
         student.updateCurriculum(command);
         return Optional.of(this.studentRepository.save(student));
       }).orElseThrow(() ->
-          new IllegalArgumentException("Student not found with code " + command.studentCode()));
+          new NotFoundArgumentException("Student not found with code: " + command.studentCode()));
     }
     catch (Exception e) {
-      throw new IllegalArgumentException("Error while updating student curriculum: " + e.getMessage());
+      throw new PersistenceException("Error while updating student curriculum: " + e.getMessage());
     }
     return null;
   }
@@ -100,7 +104,8 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   public void handle(DeleteStudentCommand command) {
     // validate if a student exists
     if (!this.studentRepository.existsByCode(command.studentCode())) {
-      throw new IllegalArgumentException("Student not found");
+      throw new NotFoundArgumentException(
+          String.format("Profile ID: %s, not found in external Profile service: ", command.studentCode()));
     }
 
     this.studentRepository.findByCode(command.studentCode()).ifPresent(optionalStudent -> {

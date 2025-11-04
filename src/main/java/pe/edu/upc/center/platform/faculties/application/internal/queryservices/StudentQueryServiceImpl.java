@@ -10,6 +10,7 @@ import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByPro
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByCodeQuery;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentQueryService;
 import pe.edu.upc.center.platform.faculties.infrastructure.persistence.jpa.repositories.StudentRepository;
+import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundIdException;
 
 /**
  * Implementation of the StudentQueryService interface.
@@ -35,7 +36,8 @@ public class StudentQueryServiceImpl implements StudentQueryService {
 
   @Override
   public Optional<Student> handle(GetStudentByIdQuery query) {
-    return this.studentRepository.findById(query.studentId());
+    return Optional.ofNullable(this.studentRepository.findById(query.studentId())
+        .orElseThrow(() -> new NotFoundIdException(Student.class, query.studentId())));
   }
 
   @Override

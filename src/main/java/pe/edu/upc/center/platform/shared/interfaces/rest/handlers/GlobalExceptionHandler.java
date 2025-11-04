@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundArgumentException;
 import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundIdException;
 import pe.edu.upc.center.platform.shared.interfaces.rest.resources.*;
 
@@ -71,8 +72,18 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(NotFoundIdException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<NotFoundResponse> handleProfileNotfoundException(
+  public ResponseEntity<NotFoundResponse> handleNotFoundIdException(
       NotFoundIdException ex) {
+    var response = new NotFoundResponse(
+        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), ex.getMessage()
+    );
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
+
+  @ExceptionHandler(NotFoundArgumentException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<NotFoundResponse> handleNotFoundArgumentException(
+      NotFoundArgumentException ex) {
     var response = new NotFoundResponse(
         HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), ex.getMessage()
     );

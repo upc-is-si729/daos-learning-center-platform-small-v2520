@@ -26,19 +26,4 @@ public class ExternalProfileService {
   public boolean existsProfileById(ProfileId profileId) {
     return this.profilesContextFacade.existsProfileById(profileId.profileId());
   }
-
-  /**
-   * Fetches a ProfileId by full name using the ProfilesContextFacade.
-   *
-   * @param firstName the first name of the profile
-   * @param lastName  the last name of the profile
-   * @return an Optional containing the ProfileId if found, or an empty Optional if not found
-   */
-  public Optional<ProfileId> fetchProfileIdByFullName(String firstName, String lastName) {
-    var profileId = this.profilesContextFacade.fetchProfileIdByFullName(firstName, lastName);
-    if (profileId.equals(0L)) {
-      return Optional.empty();
-    }
-    return Optional.of(new ProfileId(profileId));
-  }
 }

@@ -3,6 +3,9 @@ package pe.edu.upc.center.platform.faculties.interfaces.rest.assemblers;
 import pe.edu.upc.center.platform.faculties.domain.model.aggregates.Student;
 import pe.edu.upc.center.platform.faculties.domain.model.commands.CreateStudentCommand;
 import pe.edu.upc.center.platform.faculties.domain.model.commands.TransferProgramStudentCommand;
+import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.CurriculumId;
+import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.ProfileId;
+import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.ProgramId;
 import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.StudentCode;
 import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.CreateStudentRequest;
 import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.StudentMinimalResponse;
@@ -13,15 +16,16 @@ public class StudentAssembler {
 
   public static CreateStudentCommand toCommandFromTransferRequest(CreateStudentRequest request) {
 
-    return new CreateStudentCommand(request.profileId(), request.programId(),
-        request.curriculumId());
+    return new CreateStudentCommand(
+        new ProfileId(request.profileId()), new ProgramId(request.programId()),
+        new CurriculumId(request.curriculumId()));
   }
 
   public static TransferProgramStudentCommand toCommandFromTransferRequest(
       String studentCode, TransferProgramStudentRequest request) {
 
     return new TransferProgramStudentCommand(new StudentCode(studentCode),
-        request.programId(), request.curriculumId());
+        new ProgramId(request.programId()), new CurriculumId(request.curriculumId()));
   }
 
   public static StudentResponse toResponseFromEntity(Student entity) {
