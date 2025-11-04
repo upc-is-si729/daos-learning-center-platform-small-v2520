@@ -1,19 +1,13 @@
 package pe.edu.upc.center.platform.profiles.domain.model.valueobjects;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import pe.edu.upc.center.platform.shared.utils.Util;
 
 import java.util.Objects;
 
-/** Value object representing a document.
- *
- * @param type the type of the document
- * @param number the number of the document
- * */
+/**
+ * Value object representing a document.
+ */
 @Embeddable
 public record Document(DocumentTypes type, String number) {
 
@@ -30,20 +24,27 @@ public record Document(DocumentTypes type, String number) {
       throw new IllegalArgumentException("[Document] Invalid document type: [" + type + "]");
     }
     if (type == DocumentTypes.DNI && number.length() != Util.DNI_LENGTH) {
-      throw new IllegalArgumentException("[Document] DNI must have exactly 8 digits");
+      throw new IllegalArgumentException(
+          String.format("[Document] DNI must have exactly %d digits", Util.DNI_LENGTH));
     }
     if (type == DocumentTypes.CARNET_EXTRANJERIA && number.length()
         != Util.CARNET_EXTRANJERIA_LENGTH) {
-      throw new IllegalArgumentException("[Document] Carnet Extranjero must have exactly 12 digits");
+      throw new IllegalArgumentException(
+          String.format("[Document] Carnet Extranjero must have exactly %d digits",
+              Util.CARNET_EXTRANJERIA_LENGTH));
     }
     if (type == DocumentTypes.RUC && number.length() != Util.RUC_LENGTH) {
-      throw new IllegalArgumentException("[Document] RUC must have exactly 11 digits");
+      throw new IllegalArgumentException(
+          String.format("[Document] RUC must have exactly %d digits", Util.RUC_LENGTH));
     }
     if (type == DocumentTypes.PASAPORTE && number.length() != Util.PASAPORTE_LENGTH) {
-      throw new IllegalArgumentException("[Document] Pasaporte must have exactly 10 digits");
+      throw new IllegalArgumentException(
+          String.format("[Document] Pasaporte must have exactly %s digits",
+              Util.PASAPORTE_LENGTH));
     }
     if (type == DocumentTypes.PTP && number.length() != Util.PTP_LENGTH) {
-      throw new IllegalArgumentException("[Document] PTP must have exactly 12 digits");
+      throw new IllegalArgumentException(
+          String.format("[Document] PTP must have exactly %s digits", Util.PTP_LENGTH));
     }
   }
   // Default constructor for JPA.
@@ -52,7 +53,7 @@ public record Document(DocumentTypes type, String number) {
   }
 
   public String getFullDocument() {
-    return String.format("%s: %s", type, number);
+    return String.format("%s %s", type.toString(), number);
   }
 
 }

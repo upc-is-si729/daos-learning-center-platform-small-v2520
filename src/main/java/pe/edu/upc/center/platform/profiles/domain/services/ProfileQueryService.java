@@ -1,10 +1,9 @@
 package pe.edu.upc.center.platform.profiles.domain.services;
 
-import pe.edu.upc.center.platform.profiles.domain.model.aggregates.Profile;
-import pe.edu.upc.center.platform.profiles.domain.model.queries.*;
-
 import java.util.List;
 import java.util.Optional;
+import pe.edu.upc.center.platform.profiles.domain.model.aggregates.Profile;
+import pe.edu.upc.center.platform.profiles.domain.model.queries.*;
 
 /**
  * Service interface for handling profile-related queries.

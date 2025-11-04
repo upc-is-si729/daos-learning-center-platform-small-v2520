@@ -1,6 +1,7 @@
 package pe.edu.upc.center.platform.profiles.domain.model.commands;
 
 import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.*;
+import pe.edu.upc.center.platform.shared.utils.Util;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -30,8 +31,10 @@ public record UpdateProfileCommand(Long profileId, PersonName name, Document doc
     if (profileId < 0) {
       throw new IllegalArgumentException("[UpdateProfileCommand] profileId must be greater than 0");
     }
-    if (age < 0 || age > 100) {
-      throw new IllegalArgumentException("[UpdateProfileCommand] the age must be between 0 and 100");
+    if (age < Util.MIN_AGE || age > Util.MAX_AGE) {
+      throw new IllegalArgumentException(
+          String.format("[UpdateProfileCommand] The age must be between %s and %s",
+              Util.MIN_AGE, Util.MAX_AGE));
     }
     if (birthDate.isAfter(LocalDate.now())) {
       throw new IllegalArgumentException("[UpdateProfileCommand] The birthdate cannot be in the future");

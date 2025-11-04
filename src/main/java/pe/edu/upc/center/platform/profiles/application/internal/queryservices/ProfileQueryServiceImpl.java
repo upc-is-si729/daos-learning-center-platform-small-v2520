@@ -7,6 +7,7 @@ import pe.edu.upc.center.platform.profiles.domain.model.aggregates.Profile;
 import pe.edu.upc.center.platform.profiles.domain.model.queries.*;
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileQueryService;
 import pe.edu.upc.center.platform.profiles.infrastructure.persistence.jpa.repositories.ProfileRepository;
+import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundIdException;
 
 /**
  * Implementation of the ProfileQueryService interface.
@@ -32,7 +33,8 @@ public class ProfileQueryServiceImpl implements ProfileQueryService {
 
   @Override
   public Optional<Profile> handle(GetProfileByIdQuery query) {
-    return this.profileRepository.findById(query.profileId());
+    return Optional.ofNullable(this.profileRepository.findById(query.profileId())
+        .orElseThrow(() -> new NotFoundIdException(Profile.class, query.profileId())));
   }
 
   @Override

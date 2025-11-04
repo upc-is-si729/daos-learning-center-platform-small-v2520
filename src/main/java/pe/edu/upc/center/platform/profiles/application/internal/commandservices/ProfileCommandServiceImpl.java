@@ -1,16 +1,15 @@
 package pe.edu.upc.center.platform.profiles.application.internal.commandservices;
 
 import jakarta.persistence.PersistenceException;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
-import pe.edu.upc.center.platform.profiles.domain.exceptions.ProfileNotfoundException;
 import pe.edu.upc.center.platform.profiles.domain.model.aggregates.Profile;
 import pe.edu.upc.center.platform.profiles.domain.model.commands.CreateProfileCommand;
 import pe.edu.upc.center.platform.profiles.domain.model.commands.DeleteProfileCommand;
 import pe.edu.upc.center.platform.profiles.domain.model.commands.UpdateProfileCommand;
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileCommandService;
 import pe.edu.upc.center.platform.profiles.infrastructure.persistence.jpa.repositories.ProfileRepository;
-
-import java.util.Optional;
+import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundIdException;
 
 /**
  * Implementation of ProfileCommandService.
@@ -58,7 +57,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
     // Validate if the profile already exists
     var profileId = command.profileId();
     if (!this.profileRepository.existsById(profileId)) {
-      throw new ProfileNotfoundException(profileId);
+      throw new NotFoundIdException(Profile.class, profileId);
     }
     if (this.profileRepository.existsByEmailAndIdIsNot(command.email(), profileId)) {
       throw new IllegalArgumentException("[ProfileCommandServiceImpl] Profile with email "
@@ -86,7 +85,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
   public void handle(DeleteProfileCommand command) {
     // If the profile does not exist, throw an exception
     if (!this.profileRepository.existsById(command.profileId())) {
-      throw new ProfileNotfoundException(command.profileId());
+      throw new NotFoundIdException(Profile.class, command.profileId());
     }
 
     // Try to delete the profile, if an error occurs, throw an exception

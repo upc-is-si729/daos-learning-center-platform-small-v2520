@@ -2,6 +2,9 @@ package pe.edu.upc.center.platform.profiles.domain.model.valueobjects;
 
 import java.util.Arrays;
 
+/**
+ * Enumeration representing different types of documents.
+ */
 public enum DocumentTypes {
   OTRO(0),
   DNI(1),
@@ -25,6 +28,7 @@ public enum DocumentTypes {
         .filter(dt -> dt.value == value)
         .findFirst()
         .orElseThrow(() ->
-            new IllegalArgumentException("[DocumentTypes] Invalid value for DocumentType: " + value));
+            new IllegalArgumentException("[DocumentTypes] Invalid value for DocumentType: "
+                + value));
   }
 }

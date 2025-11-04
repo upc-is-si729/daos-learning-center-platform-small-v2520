@@ -1,9 +1,9 @@
 package pe.edu.upc.center.platform.profiles.domain.model.commands;
 
-import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.*;
-
 import java.time.LocalDate;
 import java.util.Objects;
+import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.*;
+import pe.edu.upc.center.platform.shared.utils.Util;
 
 /**
  * Command to create a new profile.
@@ -26,8 +26,10 @@ public record CreateProfileCommand(PersonName name, Document document,
     Objects.requireNonNull(address, "[CreateProfileCommand] address must not be null");
     Objects.requireNonNull(birthDate, "[CreateProfileCommand] birthDate must not be null");
 
-    if (age < 0 || age > 100) {
-      throw new IllegalArgumentException("[CreateProfileCommand] The age must be between 0 and 100");
+    if (age < Util.MIN_AGE || age > Util.MAX_AGE) {
+      throw new IllegalArgumentException(
+          String.format("[CreateProfileCommand] The age must be between %s and %s",
+              Util.MIN_AGE, Util.MAX_AGE));
     }
     if (birthDate.isAfter(LocalDate.now())) {
       throw new IllegalArgumentException("[CreateProfileCommand] The birthdate cannot be in the future");

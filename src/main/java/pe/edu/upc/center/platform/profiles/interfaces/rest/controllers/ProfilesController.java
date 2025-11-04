@@ -5,8 +5,12 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +24,10 @@ import pe.edu.upc.center.platform.profiles.domain.services.ProfileCommandService
 import pe.edu.upc.center.platform.profiles.domain.services.ProfileQueryService;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.assemblers.ProfileAssembler;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.*;
-import pe.edu.upc.center.platform.shared.interfaces.rest.resources.ValidationExceptionResponse;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.InternaServerErrorResponse;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.NotFoundResponse;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.ServiceUnavailableResponse;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.BadRequestResponse;
 
 /**
  * REST controller for managing profiles.
@@ -64,18 +67,26 @@ public class ProfilesController {
           description = "Profile data for creation", required = true,
           content = @Content (
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = CreateProfileRequest.class))),
-      responses = {
-        @ApiResponse(responseCode = "201", description = "Profile created successfully",
-            content = @Content(
-                mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ProfileMinimalResponse.class))),
-        @ApiResponse(responseCode = "400", description = "Bad request - Invalid input data",
-            content = @Content(
-                mediaType = MediaType.APPLICATION_JSON_VALUE,
-                schema = @Schema(implementation = ValidationExceptionResponse.class)))
-      }
+              schema = @Schema(implementation = CreateProfileRequest.class)))
   )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Profile created successfully",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = ProfileMinimalResponse.class))),
+      @ApiResponse(responseCode = "400", description = "Bad request - Invalid input data",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = BadRequestResponse.class))),
+      @ApiResponse(responseCode = "500", description = "Internal server error - Unexpected error",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = InternaServerErrorResponse.class))),
+      @ApiResponse(responseCode = "503", description = "Service unavailable - Persistence error",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = ServiceUnavailableResponse.class)))
+  })
   @PostMapping
   public ResponseEntity<ProfileMinimalResponse> createProfile(
       @Valid @RequestBody CreateProfileRequest request) {
@@ -101,14 +112,14 @@ public class ProfilesController {
    * @return a list of ResponseMinimalEntity
    */
   @Operation( summary = "Retrieve all profiles",
-    description = "Retrieves all profiles or filters by age if provided",
-    responses = {
+    description = "Retrieves all profiles or filters by age if provided"
+  )
+  @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully",
           content = @Content(
               mediaType = MediaType.APPLICATION_JSON_VALUE,
               array = @ArraySchema(schema = @Schema(implementation = ProfileMinimalResponse.class)) ))
-    }
-  )
+  })
   @GetMapping
   public ResponseEntity<List<ProfileMinimalResponse>> getAllProfiles(
       @RequestParam(required = false) Integer age) {
@@ -136,22 +147,22 @@ public class ProfilesController {
    * @return a ResponseEntity containing the profile resource or a bad request status if not found
    */
   @Operation(summary = "Retrieve a profile by its ID",
-    description = "Retrieves a profile using its unique ID",
-      responses = {
-          @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully",
-              content = @Content(
-                  mediaType = MediaType.APPLICATION_JSON_VALUE,
-                  schema = @Schema(implementation = ProfileResponse.class)))
-      }
+    description = "Retrieves a profile using its unique ID"
   )
-
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = ProfileResponse.class))),
+      @ApiResponse(responseCode = "404", description = "Not found - Related resource not found",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = NotFoundResponse.class)))
+  })
   @GetMapping("/{profileId}")
   public ResponseEntity<ProfileResponse> getProfileById(@PathVariable Long profileId) {
     var getProfileByIdQuery = new GetProfileByIdQuery(profileId);
     var optionalProfile = this.profileQueryService.handle(getProfileByIdQuery);
-    if (optionalProfile.isEmpty()) {
-      return ResponseEntity.badRequest().build();
-    }
     var profileResponse = ProfileAssembler.toResponseFromEntity(optionalProfile.get());
     return ResponseEntity.ok(profileResponse);
   }
@@ -170,18 +181,30 @@ public class ProfilesController {
           description = "Profile data for update", required = true,
           content = @Content (
               mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = UpdateProfileRequest.class))),
-      responses = {
-          @ApiResponse(responseCode = "200", description = "Profile updated successfully",
-              content = @Content(
-                  mediaType = MediaType.APPLICATION_JSON_VALUE,
-                  schema = @Schema(implementation = ProfileResponse.class))),
-          @ApiResponse(responseCode = "400", description = "Bad request - Invalid input data",
-              content = @Content(
-                  mediaType = MediaType.APPLICATION_JSON_VALUE,
-                  schema = @Schema(implementation = RuntimeException.class)))
-      }
+              schema = @Schema(implementation = UpdateProfileRequest.class)))
   )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Profile updated successfully",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = ProfileResponse.class))),
+      @ApiResponse(responseCode = "400", description = "Bad request - Invalid input data",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = BadRequestResponse.class))),
+      @ApiResponse(responseCode = "404", description = "Not found - Related resource not found",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = NotFoundResponse.class))),
+      @ApiResponse(responseCode = "500", description = "Internal server error - Unexpected error",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = InternaServerErrorResponse.class))),
+      @ApiResponse(responseCode = "503", description = "Service unavailable - Persistence error",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = ServiceUnavailableResponse.class)))
+  })
   @PutMapping("/{profileId}")
   public ResponseEntity<ProfileResponse> updateProfile(@PathVariable Long profileId,
                                                        @Valid @RequestBody UpdateProfileRequest request) {
@@ -202,15 +225,14 @@ public class ProfilesController {
    * @return a ResponseEntity with no content if deletion is successful
    */
   @Operation(summary = "Delete a profile by its ID",
-    description = "Deletes a profile using its unique ID",
-      responses = {
-          @ApiResponse(responseCode = "204", description = "Profile deleted successfully"),
-          @ApiResponse(responseCode = "400", description = "Bad request - Invalid profile ID",
-              content = @Content(
-                  mediaType = MediaType.APPLICATION_JSON_VALUE,
-                  schema = @Schema(implementation = RuntimeException.class)))
-      }
-  )
+    description = "Deletes a profile using its unique ID")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Profile deleted successfully"),
+      @ApiResponse(responseCode = "404", description = "Not found - Related resource not found",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = NotFoundResponse.class))),
+  })
   @DeleteMapping("/{profileId}")
   public ResponseEntity<?> deleteProfile(@PathVariable Long profileId) {
     var deleteProfileCommand = new DeleteProfileCommand(profileId);

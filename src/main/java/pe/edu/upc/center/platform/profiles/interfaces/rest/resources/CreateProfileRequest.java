@@ -1,13 +1,11 @@
 package pe.edu.upc.center.platform.profiles.interfaces.rest.resources;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
-import pe.edu.upc.center.platform.profiles.domain.model.valueobjects.DocumentTypes;
+import pe.edu.upc.center.platform.shared.utils.Util;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 /**
  * Request to create a profile.
@@ -38,10 +36,11 @@ public record CreateProfileRequest(
     int documentType,
 
     @JsonProperty("documentNumber")
-    @NotNull @NotBlank @Size(min = 8, max = 12)
+    @NotNull @NotBlank
+    @Size(min = Util.DOCUMENT_NUMBER_MIN_LENGTH, max = Util.DOCUMENT_NUMBER_MAX_LENGTH)
     String documentNumber,
 
-    @JsonProperty("birthDate") @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("birthDate") @JsonFormat(pattern = Util.DATE_FORMAT_PATTERN)
     @NotNull @Past
     LocalDate birthDate,
 
@@ -55,7 +54,7 @@ public record CreateProfileRequest(
 
     @JsonProperty("streetNumber")
     @NotNull @NotBlank
-    @Size(min = 1, max = 5)
+    @Size(min = Util.STREET_NUMBER_MIN_LENGTH, max = Util.STREET_NUMBER_MAX_LENGTH)
     String streetNumber,
 
     @JsonProperty("city")
@@ -65,7 +64,7 @@ public record CreateProfileRequest(
     @JsonProperty("postalCode")
     @NotNull @NotBlank
     @Pattern(regexp = "\\d{5}", message = "Postal code must be 5 digits")
-    @Size(min = 5, max = 5)
+    @Size(min = Util.POSTAL_CODE_LENGTH, max = Util.POSTAL_CODE_LENGTH)
     String postalCode,
 
     @JsonProperty("country")

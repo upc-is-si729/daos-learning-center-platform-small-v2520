@@ -1,10 +1,8 @@
 package pe.edu.upc.center.platform.profiles.domain.model.valueobjects;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.Objects;
+import pe.edu.upc.center.platform.shared.utils.Util;
 
 /**
  * Value object representing a street address.
@@ -12,14 +10,6 @@ import java.util.Objects;
 @Embeddable
 public record StreetAddress(String street, String number, String city, String postalCode,
                             String country) {
-
-  /**
-   * Default constructor for JPA.
-   */
-  public StreetAddress() {
-    this(null, null, null, null, null);
-  }
-
   /**
    * Constructs a StreetAddress instance with the specified details.
    *
@@ -36,8 +26,10 @@ public record StreetAddress(String street, String number, String city, String po
     if (Objects.isNull(number) || number.isBlank()) {
       throw new IllegalArgumentException("[StreetAddress] Street Number cannot be null or blank");
     }
-    if (number.length() > 5) {
-      throw new IllegalArgumentException("[StreetAddress] Street Number cannot have more than 5 digits");
+    if (number.length() > Util.STREET_NUMBER_MAX_LENGTH) {
+      throw new IllegalArgumentException(
+          String.format("[StreetAddress] Street Number cannot have more than %s digits",
+              Util.STREET_NUMBER_MAX_LENGTH));
     }
     if (Objects.isNull(city) || city.isBlank()) {
       throw new IllegalArgumentException("[StreetAddress] City cannot be null or blank");
@@ -45,12 +37,21 @@ public record StreetAddress(String street, String number, String city, String po
     if (Objects.isNull(postalCode) || postalCode.isBlank()) {
       throw new IllegalArgumentException("[StreetAddress] Postal code cannot be null or blank");
     }
-    if (postalCode.length() != 5) {
-      throw new IllegalArgumentException("[StreetAddress] Postal code must be 5 digits long");
+    if (postalCode.length() != Util.POSTAL_CODE_LENGTH) {
+      throw new IllegalArgumentException(
+          String.format("[StreetAddress] Postal code must be %s digits long",
+              Util.POSTAL_CODE_LENGTH));
     }
     if(Objects.isNull(country) || country.isBlank()){
       throw new IllegalArgumentException("[StreetAddress] Country cannot be null or blank");
     }
+  }
+
+  /**
+   * Default constructor for JPA.
+   */
+  public StreetAddress() {
+    this(null, null, null, null, null);
   }
 
   public String getFullAddress() {

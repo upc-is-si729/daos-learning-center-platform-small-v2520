@@ -23,3 +23,15 @@
 Enlace del Swagger
 
 http://localhost:8092/swagger-ui/index.html
+
+## New feature in a new version
+
+- Value objects in the domain layer with attribute validation.
+- Enums in the domain layer supporting custom values.
+- Centralized constants in a utility class.
+- Use of value objects as attributes in Commands and Queries.
+- Validation is applied to attributes in Commands and Queries.
+- Custom exception types for domain and application errors.
+- Global exception handling implemented with @RestControllerAdvice.
+- 
+- 

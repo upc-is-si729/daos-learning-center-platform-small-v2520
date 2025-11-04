@@ -7,25 +7,26 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import pe.edu.upc.center.platform.profiles.domain.exceptions.ProfileNotfoundException;
-import pe.edu.upc.center.platform.shared.interfaces.rest.resources.NotFoundExceptionResponse;
-import pe.edu.upc.center.platform.shared.interfaces.rest.resources.ValidationExceptionResponse;
+import pe.edu.upc.center.platform.shared.interfaces.rest.resources.BadRequestResponse;
 
 import java.time.format.DateTimeParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Global exception handler for profile-related exceptions.
+ */
 @RestControllerAdvice(basePackages = "pe.edu.upc.center.platform.profiles" )
 public class ProfileExceptionHandler {
 
   @ExceptionHandler(DateTimeParseException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ValidationExceptionResponse> handleDateTimeParseException(
+  public ResponseEntity<BadRequestResponse> handleDateTimeParseException(
       DateTimeParseException ex) {
     Map<String, String> fieldErrors = new LinkedHashMap<>();
     fieldErrors.put("birthDate", "Invalid date format (YYYY-MM-DD): " + ex.getMessage());
 
-    var response = new ValidationExceptionResponse(
+    var response = new BadRequestResponse(
         HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
         "Date parsing failed", fieldErrors);
 
@@ -34,7 +35,7 @@ public class ProfileExceptionHandler {
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ValidationExceptionResponse> handleJsonParseError(
+  public ResponseEntity<BadRequestResponse> handleJsonParseError(
       HttpMessageNotReadableException ex) {
     Throwable cause = ex.getCause();
 
@@ -44,7 +45,7 @@ public class ProfileExceptionHandler {
       fieldErrors.put("birthDate", "Invalid value '" + ife.getValue().toString()
           + "' for LocalDate. Expected format (YYYY-MM-DD) ");
 
-      var response = new ValidationExceptionResponse(
+      var response = new BadRequestResponse(
           HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(),
           "Date parsing failed", fieldErrors);
 
@@ -53,16 +54,5 @@ public class ProfileExceptionHandler {
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
   }
-
-  @ExceptionHandler(ProfileNotfoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<NotFoundExceptionResponse> handleProfileNotfoundException(
-      ProfileNotfoundException ex) {
-    var response = new NotFoundExceptionResponse(
-        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), ex.getMessage()
-    );
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-  }
-
 
 }
