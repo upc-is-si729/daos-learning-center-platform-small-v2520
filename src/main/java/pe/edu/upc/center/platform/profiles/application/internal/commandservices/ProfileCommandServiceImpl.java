@@ -76,7 +76,7 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
       var updatedProfile = this.profileRepository.save(profileToUpdate);
       return Optional.of(updatedProfile);
     } catch (Exception e) {
-      throw new PersistenceException("[ProfileCommandServiceImpl] Error while updating profile: "
+        throw new PersistenceException("[ProfileCommandServiceImpl] Error while updating profile: "
           + e.getMessage());
     }
   }

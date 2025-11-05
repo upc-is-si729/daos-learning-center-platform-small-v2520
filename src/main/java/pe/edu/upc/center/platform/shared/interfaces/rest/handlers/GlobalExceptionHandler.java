@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<NotFoundResponse> handleNotFoundIdException(
       NotFoundIdException ex) {
     var response = new NotFoundResponse(
-        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), ex.getMessage()
+        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage()
     );
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<NotFoundResponse> handleNotFoundArgumentException(
       NotFoundArgumentException ex) {
     var response = new NotFoundResponse(
-        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), ex.getMessage()
+        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage()
     );
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }

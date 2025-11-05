@@ -20,6 +20,21 @@
 - 🧾 springdoc-openapi (Swagger UI) — API documentation
 - 🗄 pgAdmin — database administration
 
+## Class 
+
+```mermaid
+---
+title: Application Layer Interaction
+description: A diagram illustrating how a user interacts with the Learning Center Platform Small v2520
+---
+graph TD
+    User -->|HTTP request| Controller[Controller]
+    Controller -->|calls| Service[Service]
+    Service -->|uses| Repository[Repository]
+    Repository -->|queries| Database[(PostgreSQL)]
+    Controller -->|HTTP response| User
+```
+
 Enlace del Swagger
 
 http://localhost:8092/swagger-ui/index.html
@@ -34,4 +49,33 @@ http://localhost:8092/swagger-ui/index.html
 - Custom exception types for domain and application errors.
 - Global exception handling implemented with @RestControllerAdvice.
 - 
-- 
+
+
+### 👉 Ejemplo: Solución escalable para agentes
+
+```mermaid
+---
+title: Scalable Agent Solution with MCP
+description: A diagram illustrating how a user interacts with an LLM that connects to multiple MCP servers, with each server providing both knowledge and tools, creating a scalable AI system architecture
+---
+graph TD
+    User -->|Prompt| LLM
+    LLM -->|Response| User
+    LLM -->|MCP| ServerA
+    LLM -->|MCP| ServerB
+    ServerA -->|Universal connector| ServerB
+    ServerA --> KnowledgeA
+    ServerA --> ToolsA
+    ServerB --> KnowledgeB
+    ServerB --> ToolsB
+
+    subgraph Server A
+        KnowledgeA[Knowledge]
+        ToolsA[Tools]
+    end
+
+    subgraph Server B
+        KnowledgeB[Knowledge]
+        ToolsB[Tools]
+    end
+```
