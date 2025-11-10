@@ -65,14 +65,11 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   @Override
   public Optional<Student> handle(TransferProgramStudentCommand command) {
 
-    // validate if a student not exists
-    if (!this.studentRepository.existsByCode(command.studentCode())) {
-      throw new NotFoundArgumentException(
-          String.format("Student not found with code %s", command.studentCode()));
-    }
-    // validate if a program exists
+    // Find and validate if a student exists
+    var studentToUpdate = this.studentRepository.findByCode(command.studentCode())
+        .orElseThrow(() -> new NotFoundArgumentException(
+            String.format("Student not found with code: %s ",command.studentCode().code())));
 
-    var studentToUpdate = this.studentRepository.findByCode(command.studentCode()).get();
     studentToUpdate.updateProgram(command);
 
     try {
@@ -87,17 +84,19 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   @Override
   public Optional<Student> handle(ChangeCurriculumStudentCommand command) {
 
-    try {
-      this.studentRepository.findByCode(command.studentCode()).map(student -> {
-        student.updateCurriculum(command);
-        return Optional.of(this.studentRepository.save(student));
-      }).orElseThrow(() ->
-          new NotFoundArgumentException("Student not found with code: " + command.studentCode()));
-    }
-    catch (Exception e) {
-      throw new PersistenceException("Error while updating student curriculum: " + e.getMessage());
-    }
-    return Optional.empty();
+    return this.studentRepository.findByCode(command.studentCode())
+        .map(student -> {
+          student.updateCurriculum(command);
+          try {
+            return Optional.of(this.studentRepository.save(student));
+          } catch (Exception e) {
+            throw new PersistenceException("Error while updating student curriculum: " + e.getMessage());
+          }
+        })
+        .orElseThrow(() ->
+            new NotFoundArgumentException("Student not found with code: "
+                + command.studentCode().code()));
+
   }
 
   @Override
@@ -105,7 +104,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
     // validate if a student exists
     if (!this.studentRepository.existsByCode(command.studentCode())) {
       throw new NotFoundArgumentException(
-          String.format("Student not found with code %s", command.studentCode()));
+          String.format("Student not found with code %s", command.studentCode().code()));
     }
 
     try {

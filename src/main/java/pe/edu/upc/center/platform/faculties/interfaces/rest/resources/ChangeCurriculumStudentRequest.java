@@ -4,12 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record TransferProgramStudentRequest(
-    @JsonProperty("programId")
-    @NotNull @Positive
-    Long programId,
-
+public record ChangeCurriculumStudentRequest(
     @JsonProperty("curriculumId")
     @NotNull @Positive
-    Long curriculumId) {
+    Long curriculumId
+) {
 }

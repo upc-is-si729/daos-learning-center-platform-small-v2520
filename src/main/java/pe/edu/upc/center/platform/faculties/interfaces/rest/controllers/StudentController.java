@@ -24,10 +24,7 @@ import pe.edu.upc.center.platform.faculties.domain.model.valueobjects.StudentCod
 import pe.edu.upc.center.platform.faculties.domain.services.StudentCommandService;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentQueryService;
 import pe.edu.upc.center.platform.faculties.interfaces.rest.assemblers.StudentAssembler;
-import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.CreateStudentRequest;
-import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.StudentMinimalResponse;
-import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.StudentResponse;
-import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.TransferProgramStudentRequest;
+import pe.edu.upc.center.platform.faculties.interfaces.rest.resources.*;
 import pe.edu.upc.center.platform.profiles.interfaces.rest.resources.ProfileMinimalResponse;
 import pe.edu.upc.center.platform.shared.interfaces.rest.resources.BadRequestResponse;
 import pe.edu.upc.center.platform.shared.interfaces.rest.resources.InternaServerErrorResponse;
@@ -88,7 +85,7 @@ public class StudentController {
       @Valid @RequestBody CreateStudentRequest request) {
 
     // Create student
-    var createStudentCommand = StudentAssembler.toCommandFromTransferRequest(request);
+    var createStudentCommand = StudentAssembler.toCommandFromRequest(request);
     var studentCode = this.studentCommandService.handle(createStudentCommand);
 
     // Validate if student code is null or blank
@@ -197,6 +194,39 @@ public class StudentController {
       @Valid @RequestBody TransferProgramStudentRequest request) {
     var transferProgramCommand = StudentAssembler.toCommandFromTransferRequest(studentCode, request);
     var optionalStudent = this.studentCommandService.handle(transferProgramCommand);
+
+    if (optionalStudent.isEmpty()) {
+      return ResponseEntity.badRequest().build();
+    }
+    var studentMinimalResponse = StudentAssembler.toResponseMinimalFromEntity(optionalStudent.get());
+    return ResponseEntity.ok(studentMinimalResponse);
+  }
+
+  @Operation(summary = "Transfer a Student to another Curriculum",
+      description = "Transfers a Student to a different Curriculum using its unique student code",
+      parameters = {
+          @Parameter(in = ParameterIn.PATH, name = "studentCode",
+              description = "Student code of the profile to retrieve",
+              required = true,
+              schema = @Schema(type = "string", format = "uuid"))
+      }
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Student curriculum changed successfully",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = StudentResponse.class))),
+      @ApiResponse(responseCode = "404", description = "Not found - Related resource not found",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = NotFoundResponse.class)))
+  })
+  @PutMapping("/{studentCode}/change")
+  public ResponseEntity<StudentMinimalResponse> changeCurriculum(
+      @PathVariable String studentCode,
+      @Valid @RequestBody ChangeCurriculumStudentRequest request) {
+    var changeCurriculumCommand = StudentAssembler.toCommandFromChangeRequest(studentCode, request);
+    var optionalStudent = this.studentCommandService.handle(changeCurriculumCommand);
 
     if (optionalStudent.isEmpty()) {
       return ResponseEntity.badRequest().build();
