@@ -10,6 +10,7 @@ import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByPro
 import pe.edu.upc.center.platform.faculties.domain.model.queries.GetStudentByCodeQuery;
 import pe.edu.upc.center.platform.faculties.domain.services.StudentQueryService;
 import pe.edu.upc.center.platform.faculties.infrastructure.persistence.jpa.repositories.StudentRepository;
+import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundArgumentException;
 import pe.edu.upc.center.platform.shared.domain.exceptions.NotFoundIdException;
 
 /**
@@ -42,11 +43,15 @@ public class StudentQueryServiceImpl implements StudentQueryService {
 
   @Override
   public Optional<Student> handle(GetStudentByCodeQuery query) {
-    return this.studentRepository.findByCode(query.code());
+    return Optional.ofNullable(this.studentRepository.findByCode(query.code())
+        .orElseThrow(() -> new NotFoundArgumentException("Student not found with code: "
+            + query.code().code())));
   }
 
   @Override
   public Optional<Student> handle(GetStudentByProfileIdQuery query) {
-    return this.studentRepository.findByProfileId(query.profileId());
+    return Optional.ofNullable(this.studentRepository.findByProfileId(query.profileId())
+        .orElseThrow(() -> new NotFoundArgumentException("Student not found with profile ID: "
+            + query.profileId().profileId())));
   }
 }

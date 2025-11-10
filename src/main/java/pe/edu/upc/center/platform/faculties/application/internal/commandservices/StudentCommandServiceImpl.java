@@ -47,7 +47,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
       throw new IllegalArgumentException("Student with profile ID already exists");
     }
 
-    // Validate if profile ID exists in external Profile Service
+    // Validate if profile ID not exists in external profile service
     if (!this.externalProfileService.existsProfileById(profileId)) {
       throw new NotFoundArgumentException(
           String.format("Profile ID: %s, not found in external Profile service: ", profileId.profileId()));
@@ -65,7 +65,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
   @Override
   public Optional<Student> handle(TransferProgramStudentCommand command) {
 
-    // validate if a student exists
+    // validate if a student not exists
     if (!this.studentRepository.existsByCode(command.studentCode())) {
       throw new NotFoundArgumentException(
           String.format("Student not found with code %s", command.studentCode()));
@@ -97,7 +97,7 @@ public class StudentCommandServiceImpl implements StudentCommandService {
     catch (Exception e) {
       throw new PersistenceException("Error while updating student curriculum: " + e.getMessage());
     }
-    return null;
+    return Optional.empty();
   }
 
   @Override
@@ -105,11 +105,16 @@ public class StudentCommandServiceImpl implements StudentCommandService {
     // validate if a student exists
     if (!this.studentRepository.existsByCode(command.studentCode())) {
       throw new NotFoundArgumentException(
-          String.format("Profile ID: %s, not found in external Profile service: ", command.studentCode()));
+          String.format("Student not found with code %s", command.studentCode()));
     }
 
-    this.studentRepository.findByCode(command.studentCode()).ifPresent(optionalStudent -> {
-      this.studentRepository.deleteById(optionalStudent.getId());
-    });
+    try {
+      this.studentRepository.findByCode(command.studentCode()).ifPresent(optionalStudent -> {
+        this.studentRepository.deleteById(optionalStudent.getId());
+      });
+    } catch (Exception e) {
+      throw new PersistenceException("Error while deleting student: " + e.getMessage());
+    }
+
   }
 }

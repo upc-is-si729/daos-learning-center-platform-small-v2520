@@ -2,13 +2,15 @@ package pe.edu.upc.center.platform.faculties.interfaces.rest.resources;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
-public record TransferProgramStudentRequest(Long programId,
-                                            Long curriculumId) {
-  @JsonCreator
-  public TransferProgramStudentRequest(@JsonProperty("programId") Long programId,
-                                       @JsonProperty("curriculumId") Long curriculumId) {
-    this.programId = programId;
-    this.curriculumId = curriculumId;
-  }
+public record TransferProgramStudentRequest(
+    @JsonProperty("programId")
+    @NotNull @Positive
+    Long programId,
+
+    @JsonProperty("curriculumId")
+    @NotNull @Positive
+    Long curriculumId) {
 }

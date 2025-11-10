@@ -1,6 +1,8 @@
 package pe.edu.upc.center.platform.profiles.interfaces.rest.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -112,7 +114,13 @@ public class ProfilesController {
    * @return a list of ResponseMinimalEntity
    */
   @Operation( summary = "Retrieve all profiles",
-    description = "Retrieves all profiles or filters by age if provided"
+      description = "Retrieves all profiles or filters by age if provided",
+      parameters = {
+          @Parameter(in = ParameterIn.QUERY, name = "age",
+              description = "Optional age to filter profiles",
+              required = false,
+              schema = @Schema(type = "integer", format = "int32"))
+      }
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully",
@@ -147,7 +155,13 @@ public class ProfilesController {
    * @return a ResponseEntity containing the profile resource or a bad request status if not found
    */
   @Operation(summary = "Retrieve a profile by its ID",
-    description = "Retrieves a profile using its unique ID"
+      description = "Retrieves a profile using its unique ID",
+      parameters = {
+          @Parameter(in = ParameterIn.PATH, name = "profileId",
+              description = "ID of the profile to retrieve",
+              required = true,
+              schema = @Schema(type = "integer", format = "int64"))
+      }
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully",
@@ -176,7 +190,13 @@ public class ProfilesController {
    *     if the update fails
    */
   @Operation(summary = "Update an existing profile",
-    description = "Update an existing profile with the provided data",
+      description = "Update an existing profile with the provided data",
+      parameters = {
+          @Parameter(in = ParameterIn.PATH, name = "profileId",
+              description = "ID of the profile to retrieve",
+              required = true,
+              schema = @Schema(type = "integer", format = "int64"))
+      },
       requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
           description = "Profile data for update", required = true,
           content = @Content (
@@ -225,7 +245,14 @@ public class ProfilesController {
    * @return a ResponseEntity with no content if deletion is successful
    */
   @Operation(summary = "Delete a profile by its ID",
-    description = "Deletes a profile using its unique ID")
+      description = "Deletes a profile using its unique ID",
+      parameters = {
+          @Parameter(in = ParameterIn.PATH, name = "profileId",
+              description = "ID of the profile to retrieve",
+              required = true,
+              schema = @Schema(type = "integer", format = "int64"))
+      }
+  )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "204", description = "Profile deleted successfully"),
       @ApiResponse(responseCode = "404", description = "Not found - Related resource not found",
@@ -246,6 +273,25 @@ public class ProfilesController {
    * @param age the age to filter profiles (optional)
    * @return a list of profiles matching the specified age
    */
+  @Operation( summary = "Search profiles by arguments",
+      description = "Retrieves profiles filtered by arguments if provided",
+      parameters = {
+          @Parameter(in = ParameterIn.QUERY, name = "age",
+              description = "Optional age to filter profiles",
+              required = true,
+              schema = @Schema(type = "integer", format = "int32"))
+      }
+  )
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              array = @ArraySchema(schema = @Schema(implementation = ProfileMinimalResponse.class)) )),
+      @ApiResponse(responseCode = "400", description = "Bad request - Invalid input data",
+          content = @Content(
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = BadRequestResponse.class))),
+  })
   @GetMapping("/search")
   public ResponseEntity<List<ProfileResponse>> getProfileByAge(
       @RequestParam(required = false) Integer age) {
@@ -259,7 +305,9 @@ public class ProfilesController {
       return ResponseEntity.ok(profileResources);
     }
     else {
+
       return ResponseEntity.badRequest().build();
     }
   }
+
 }

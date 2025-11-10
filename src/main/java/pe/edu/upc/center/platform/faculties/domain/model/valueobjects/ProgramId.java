@@ -23,7 +23,7 @@ public record ProgramId(Long programId) {
    * @throws IllegalArgumentException if programId is negative
    */
   public ProgramId {
-    if (Objects.isNull(programId) || programId < 0) {
+    if (Objects.isNull(programId) || programId <0) {
       throw new IllegalArgumentException("ProgramId cannot be null or negative");
     }
   }

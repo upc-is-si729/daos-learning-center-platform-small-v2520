@@ -18,7 +18,7 @@ public record ProfileId(Long profileId) {
    * @throws IllegalArgumentException if profileId is negative
    */
   public ProfileId {
-    if (Objects.isNull(profileId) || profileId < 0) {
+    if (Objects.isNull(profileId) || profileId <= 0) {
       throw new IllegalArgumentException("Profile ID cannot be null or negative");
     }
   }

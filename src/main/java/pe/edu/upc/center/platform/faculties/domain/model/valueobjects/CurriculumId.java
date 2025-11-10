@@ -8,7 +8,7 @@ import java.util.Objects;
 public record CurriculumId(Long curriculumId) {
 
   public CurriculumId {
-    if (Objects.isNull(curriculumId) || curriculumId < 0) {
+    if (Objects.isNull(curriculumId) || curriculumId <= 0) {
       throw new IllegalArgumentException("Curriculum ID cannot be null or negative");
     }
   }
