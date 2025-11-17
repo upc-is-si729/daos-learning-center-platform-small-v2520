@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import jakarta.persistence.PersistenceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pe.edu.upc.center.platform.faculties.application.internal.outboundservices.acl.ExternalProfileService;
 import pe.edu.upc.center.platform.faculties.domain.model.aggregates.Student;
 import pe.edu.upc.center.platform.faculties.domain.model.commands.ChangeCurriculumStudentCommand;
@@ -108,9 +109,10 @@ public class StudentCommandServiceImpl implements StudentCommandService {
     }
 
     try {
-      this.studentRepository.findByCode(command.studentCode()).ifPresent(optionalStudent -> {
-        this.studentRepository.deleteById(optionalStudent.getId());
-      });
+      this.studentRepository.findByCode(command.studentCode())
+          .ifPresent(student -> {
+            this.studentRepository.deleteById(student.getId());
+          });
     } catch (Exception e) {
       throw new PersistenceException("Error while deleting student: " + e.getMessage());
     }

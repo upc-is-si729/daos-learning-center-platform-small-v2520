@@ -37,7 +37,7 @@ public class OpenApiConfiguration {
             .url("https://github.com/upc-is-si729/daos-language-reference"));
 
     // Add security scheme
-    /*final String securitySchemeName = "bearerAuth";
+    final String securitySchemeName = "bearerAuth";
     openApi.addSecurityItem(new SecurityRequirement()
             .addList(securitySchemeName))
         .components(new Components()
@@ -46,7 +46,7 @@ public class OpenApiConfiguration {
                     .name(securitySchemeName)
                     .type(SecurityScheme.Type.HTTP)
                     .scheme("bearer")
-                    .bearerFormat("JWT")));*/
+                    .bearerFormat("JWT")));
 
     // Return the OpenAPI configuration object with all the settings
     return openApi;

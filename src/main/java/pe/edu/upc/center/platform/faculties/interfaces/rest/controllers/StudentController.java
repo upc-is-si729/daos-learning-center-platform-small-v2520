@@ -176,7 +176,12 @@ public class StudentController {
               description = "Student code of the profile to retrieve",
               required = true,
               schema = @Schema(type = "string", format = "uuid"))
-      }
+      },
+      requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "Data for Transfers a Student to another Program", required = true,
+          content = @Content (
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = TransferProgramStudentRequest.class)))
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Student transferred successfully",
@@ -209,7 +214,12 @@ public class StudentController {
               description = "Student code of the profile to retrieve",
               required = true,
               schema = @Schema(type = "string", format = "uuid"))
-      }
+      },
+      requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "Data for Transfers a Student to another Curriculum", required = true,
+          content = @Content (
+              mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = ChangeCurriculumStudentRequest.class)))
   )
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "Student curriculum changed successfully",
