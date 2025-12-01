@@ -105,6 +105,7 @@ public class WebSecurityConfiguration {
             exceptionHandling.authenticationEntryPoint(unauthorizedRequestHandler))
         .sessionManagement(customizer ->
             customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authenticationProvider(authenticationProvider())
         .authorizeHttpRequests(authorizeRequests ->
             authorizeRequests
                 .requestMatchers("/api/v1/authentication/**", "/v3/api-docs/**",
@@ -112,7 +113,7 @@ public class WebSecurityConfiguration {
                 .permitAll()
                 .anyRequest()
                 .authenticated());
-    http.authenticationProvider(authenticationProvider());
+    //http.authenticationProvider(authenticationProvider())
     http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
