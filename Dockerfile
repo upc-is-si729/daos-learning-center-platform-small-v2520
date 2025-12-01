@@ -19,10 +19,11 @@ COPY --from=build /workspace/target/*.jar app.jar
 
 # defaults: dev profile and port 8091 (can be overridden with -e)
 ENV SPRING_PROFILES_ACTIVE=dev
-ENV PORT=8092
+#ENV PORT=8092
 ENV JAVA_OPTS=""
 
-EXPOSE 8092
+#EXPOSE 8092
 
 # allow passing JAVA_OPTS and override profile/port via env vars
-ENTRYPOINT ["sh","-c","java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.port=${PORT} -jar /app/app.jar"]
+#ENTRYPOINT ["sh","-c","java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -Dserver.port=${PORT} -jar /app/app.jar"]
+ENTRYPOINT ["sh","-c","java $JAVA_OPTS -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE} -jar /app/app.jar"]
